@@ -7,18 +7,34 @@ while read -r line
 do
   echo "$line"
   ffq "$line" > "$line".json
-  jq '.. | select(.url?).url' ERR1474664.json | grep "ftp" | while read -r url; do echo "${url//\"/}";
-  #ads="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR147/004/ERR1474664/ERR1474664_1.fastq.gz"
+  jq '.. | select(.ftp?).ftp' "$line".json 
+  md5=`jq '.[].files.ftp[].md5' ERR1474664.json`; echo "$md5"
+  url=`jq '.[].files.ftp[].url' ERR1474664.json`; echo "$url"
+done < "$input"
+
   for var in `echo "${url//\"/}" | rev | cut -d "/" -f1 | rev`
-    do
-      echo "$var"
-      if test -f "$var"
+  do
+    echo "$var"
+    if test -f "$var"
+    then
+        echo "$var exists"
+    else
+        echo "Downloading $var";
+        wget "${url//\"/}"
+    fi
+  jq '.. | select(.md5?).md5' "$line".json | while read -r md5; do echo "$md5"
+  done
+  done
+done < "$input"
+
+      if [[ "$md5" == *"$var* ]]
       then
-          echo "$var exists"
+        echo "Not Corrupted"
       else
-          echo "Downloading $var";
-          wget "${url//\"/}"
+        echo "Corrupted"
       fi
       done
   done
 done < "$input"
+
+  #jq '.. | select(.url?).url' "$line".json | grep "ftp" | while read -r url; do echo "${url//\"/}"; done
