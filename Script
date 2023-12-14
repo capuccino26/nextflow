@@ -7,10 +7,32 @@ while read -r line
 do
   echo "$line"
   ffq "$line" > "$line".json
+  elen=`jq '.. | select(.ftp?).ftp' "$line".json | jq length`
+  echo FTP Files: "$elen"
+  elen=$((--elen))
+  while [ $elen -ge 0 ]
+  do
+    md5=`jq '.[].files.ftp[$i].md5' --argjson i $elen "$line".json`; echo MD5: "$md5"
+    url=`jq '.[].files.ftp[$i].url' --argjson i $elen "$line".json`; echo URL: "$url"
+    for var in `echo "${url//\"/}" | rev | cut -d "/" -f1 | rev`
+    do
+      if test -f "$var"
+      then
+          echo "$var exists"
+      else
+          echo "Downloading $var";
+          wget "${url//\"/}"
+      fi
+    done
+    elen=$((--elen))
+    done
+done < "$input"
+
+
+
   jq '.. | select(.ftp?).ftp' "$line".json 
   md5=`jq '.[].files.ftp[].md5' ERR1474664.json`; echo "$md5"
   url=`jq '.[].files.ftp[].url' ERR1474664.json`; echo "$url"
-done < "$input"
 
   for var in `echo "${url//\"/}" | rev | cut -d "/" -f1 | rev`
   do
@@ -22,7 +44,6 @@ done < "$input"
         echo "Downloading $var";
         wget "${url//\"/}"
     fi
-  jq '.. | select(.md5?).md5' "$line".json | while read -r md5; do echo "$md5"
   done
   done
 done < "$input"
