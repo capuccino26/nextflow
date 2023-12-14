@@ -23,30 +23,28 @@ do
           echo "Downloading $var";
           wget "${url//\"/}"
       fi
+      md5sum=`md5sum "$var"`
+      echo MD5SUM: $md5sum
+      if [[ "$md5sum" == *"${md5//\"/}"* ]]
+      then
+        echo "File not corrupted."
+      else
+        echo "File corrupted"
+      fi
     done
     elen=$((--elen))
     done
 done < "$input"
 
+if [[ "$md5sum" == *"${md5//\"/}"* ]]
+then
+  echo "File not corrupted."
+else
+  echo "File corrupted"
+fi
 
 
   jq '.. | select(.ftp?).ftp' "$line".json 
-  md5=`jq '.[].files.ftp[].md5' ERR1474664.json`; echo "$md5"
-  url=`jq '.[].files.ftp[].url' ERR1474664.json`; echo "$url"
-
-  for var in `echo "${url//\"/}" | rev | cut -d "/" -f1 | rev`
-  do
-    echo "$var"
-    if test -f "$var"
-    then
-        echo "$var exists"
-    else
-        echo "Downloading $var";
-        wget "${url//\"/}"
-    fi
-  done
-  done
-done < "$input"
 
       if [[ "$md5" == *"$var* ]]
       then
