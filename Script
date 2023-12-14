@@ -35,25 +35,3 @@ do
     elen=$((--elen))
     done
 done < "$input"
-
-if [[ "$md5sum" == *"${md5//\"/}"* ]]
-then
-  echo "File not corrupted."
-else
-  echo "File corrupted"
-fi
-
-
-  jq '.. | select(.ftp?).ftp' "$line".json 
-
-      if [[ "$md5" == *"$var* ]]
-      then
-        echo "Not Corrupted"
-      else
-        echo "Corrupted"
-      fi
-      done
-  done
-done < "$input"
-
-  #jq '.. | select(.url?).url' "$line".json | grep "ftp" | while read -r url; do echo "${url//\"/}"; done
