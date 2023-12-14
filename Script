@@ -22,6 +22,7 @@ do
   do
     md5=`jq '.[].files.ftp[$i].md5' --argjson i $elen "$line".json`; echo MD5: "$md5"
     url=`jq '.[].files.ftp[$i].url' --argjson i $elen "$line".json`; echo URL: "$url"
+    bspl=`jq '.[].sample' "$line".json`; echo BioSample: "$bspl"
     for var in `echo "${url//\"/}" | rev | cut -d "/" -f1 | rev`
     do
       if test -f "$var"
@@ -35,7 +36,7 @@ do
       then
         echo "File not corrupted."
       else
-        echo "File corrupted"
+        echo "File corrupted."
         while [[ `md5sum "$var"` != *"${md5//\"/}"* ]]
         do
           filedownload
@@ -45,3 +46,6 @@ do
     elen=$((--elen))
     done
 done < "$input"
+
+#esearch -db biosample -query $bspl | esummary -mode json
+#esearch -db bioproject -query 'PRJEB14614' | esummary -mode json
