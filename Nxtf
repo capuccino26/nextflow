@@ -3,9 +3,9 @@ params.reads = "_{1,2}.fastq.gz"
 params.accessions = "accessions.txt"
 params.outdir = "results"
 workflow {
-    SETFILES(params.reads)
+    setfiles(params.reads)
 }
-process SETFILES {
+process setfiles {
     tag "Preparing Files for $line"
  
     input:
@@ -60,5 +60,15 @@ process SETFILES {
         elen=$((--elen))
         done
     done < "$input"
+    """
+}
+
+process crttable {
+    script:
+    """
+    echo "ID\tValue"
+    for line in \$(seq 1 \$(echo \${#val[@]})); do
+        echo "\$line\t\${val[\$line-1]}"
+    done > table.txt
     """
 }
