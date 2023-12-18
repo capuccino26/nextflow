@@ -47,5 +47,15 @@ do
     done
 done < "$input"
 
+for filejs in `find ./ -name "*?.json"`
+  do
+  echo "$filejs"
+  bspl=`jq '.[].sample' "$filejs"`; echo BioSample: "$bspl"
+  smr=`esearch -db biosample -query $bspl | esummary -mode json`
+  splnm=`echo "$smr" | jq '.. | select(.title?).title'`
+  echo $splnm
+  done
+
+
 #esearch -db biosample -query $bspl | esummary -mode json
 #esearch -db bioproject -query 'PRJEB14614' | esummary -mode json
