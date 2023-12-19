@@ -47,9 +47,10 @@ do
     done
 done < "$input"
 
+#Generate Sampleinfo
 for filejs in `find ./ -name "*?.json"`
   do
-  echo "$filejs"
+  echo File: "$filejs"
   bspl=`jq '.[].sample' "$filejs"`; echo BioSample: "$bspl"
   filnm=`jq '.[].accession' "$filejs"`; echo Acession: "$filnm"
   smr=`esearch -db biosample -query $bspl | esummary -mode json`
@@ -58,7 +59,6 @@ for filejs in `find ./ -name "*?.json"`
   attb=`jq '.. | select(.sampledata?).sampledata' <<< "$smr"`
   attb=${attb##*<Attributes>}
   attb=${attb%</Attributes>*}
-  echo $attb
   attnms=$(echo $attb | grep -oP '(?<=<Attribute ).*?(?=</Attribute>)' | tr '\n' '^')
   elemn=$(echo $attb | grep -oP '(?<=attribute_name=\\").*?(?=\\")' | wc -l)
   echo "$elemn" Attributes
@@ -67,7 +67,11 @@ for filejs in `find ./ -name "*?.json"`
     attln=$(echo $attnms | cut -d "^" -f$elemn)
     attln=${attln##*attribute_name=\\\"}
     attnm=$(echo $attln | cut -d "\\" -f1)
+    attnm=${attnm^^}
+    attnm="${attnm//[^[:alnum:]]/_}"
     attvar=${attln##*>}
+    attvar=${attvar^^}
+    attvar="${attvar//[^[:alnum:]]/_}"
     echo Attribute Name: $attnm
     echo Attribute Var: $attvar
     elemn=$((--elemn))
