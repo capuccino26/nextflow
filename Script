@@ -95,19 +95,6 @@ for filejs in `find ./ -name "*?.json"`
   unset attnmt
   done
 
-    if [ -z $attvart ]
-      then
-        echo "var set"
-      else
-        echo "var not set"
-      fi
-
-attnm="BRAZIL_RIBEIRAO_PRETO__SAO_PAULO_STATE"
-echo $attnm
-attnm="${attnm/__/_}"
-attnm="${attnm/PRETO/AZUL}"
-echo $attnm
-
 #&> "${filnm}"_SAMPLEINFO.csv
 #s='<Attribute attribute_name=\"ENA first public\">2016-11-29</Attribute> <Attribute attribute_name=\"ENA last update\">2016-06-27</Attribute>'
 #grep -oP '(?<=from=).*?(?=,)' <<< "$s"
