@@ -69,18 +69,40 @@ for filejs in `find ./ -name "*?.json"`
     attnm=$(echo $attln | cut -d "\\" -f1)
     attnm=${attnm^^}
     attnm="${attnm//[^[:alnum:]]/_}"
+    attnm="${attnm/__/_}"
+    if [ -z $attnmt ]
+      then
+        attnmt=$attnm
+      else
+        attnmt+=,$attnmt
+      fi
     attvar=${attln##*>}
     attvar=${attvar^^}
     attvar="${attvar//[^[:alnum:]]/_}"
+    attvar="${attvar/__/_}"
+    if [ -z $attvart ]
+      then
+        attvart=$attvar
+      else
+        attvart+=,$attvart
+      fi
     echo Attribute Name: $attnm
     echo Attribute Var: $attvar
+    echo $attnmt
+    echo $attvart
     elemn=$((--elemn))
     done
   done
 
+    if [ -z $attvart ]
+      then
+        echo $attvart
+      else
+        echo "var not set"
+      fi
 
 
-
+#&> "${filnm}"_SAMPLEINFO.csv
 #s='<Attribute attribute_name=\"ENA first public\">2016-11-29</Attribute> <Attribute attribute_name=\"ENA last update\">2016-06-27</Attribute>'
 #grep -oP '(?<=from=).*?(?=,)' <<< "$s"
 #smr=$(cat "samplesmr.txt")
