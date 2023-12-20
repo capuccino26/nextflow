@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 params.rawfiles = "$projectDir/*.json"
 
-println "Files: $params.rawfiles"
+println "File: $params.rawfiles"
 
 process sampleinfo {
         publishDir "$projectDir/SAMPLEINFO", mode: 'copy'
