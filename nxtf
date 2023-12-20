@@ -1,0 +1,24 @@
+#!/usr/bin/env nextflow
+params.rawfiles = "$projectDir/*.json"
+
+println "Files: $params.rawfiles"
+
+process sampleinfo {
+        publishDir "$projectDir/SAMPLEINFO", mode: 'copy'
+
+        input:
+        path filejs
+
+        output:
+        file '*'
+
+        script:
+        """
+        echo File: $filejs
+        /media/bkoffee/HDD1/NEXTFLOW/sampleinfo.sh "$filejs"
+        """
+}
+
+workflow {
+        Channel.fromPath(params.rawfiles) | sampleinfo
+}
