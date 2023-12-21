@@ -22,3 +22,6 @@ process sampleinfo {
 workflow {
         Channel.fromPath(params.rawfiles) | sampleinfo
 }
+
+#params.list = "$projectDir/accessions.txt"
+#params.reads = Channel.fromPath(params.list).splitText().map { file(it) }.set { file_list }
